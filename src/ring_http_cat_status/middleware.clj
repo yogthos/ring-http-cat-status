@@ -13,15 +13,17 @@
     (.setSSLSocketFactory conn (.getSocketFactory sc))))
 
 (defn read-image [url]
-  (let [conn (.openConnection (java.net.URL. url))]
-    (set-socket-factory conn)
-    (.getInputStream conn)))
+  (try
+    (let [conn (.openConnection (java.net.URL. url))]
+      (set-socket-factory conn)
+      (.getInputStream conn))
+    (catch Exception _)))
 
 (defn wrap-cat-http-status [handler]
   (fn [request]
     (let [{:keys [status] :as response} (handler request)]
-      (if-not (and status (some #{status} (map (partial + 200) (range 7))))
+      (if (or (nil? status) (and (> status 199) (< status 300)))
+        response
         {:status status
          :headers {"Content-Type" "image/jpeg"}
-         :body (read-image (str "https://http.cat/" status))}
-        response))))
+         :body (read-image (str "https://http.cat/" status))}))))
