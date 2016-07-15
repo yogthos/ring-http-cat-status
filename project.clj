@@ -1,4 +1,4 @@
-(defproject ring-http-cat-status "0.1.0"
+(defproject ring-http-cat-status "0.1.1"
   :description "a library designed to serve HTTP status images from https://http.cat/"
   :url "https://github.com/yogthos/ring-http-cat-status"
   :license {:name "Eclipse Public License"
